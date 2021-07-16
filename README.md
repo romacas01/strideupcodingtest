@@ -91,7 +91,7 @@ API SPEC
         }
       }
     },
-    "/parks/parkCode": {
+    "/park/parkCode": {
       "get": {
         "tags": [
           "park"
