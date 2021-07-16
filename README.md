@@ -17,11 +17,11 @@ I also decided to use Spring Data JPA on the repository layer since it is very s
 
 Are there any improvements you could make to your submission?
 
-I would better refactor the controller by eliminating some duplicated code. I would also increment the testing coverage.
+I would better refactor the controller by eliminating some duplicated code. I would also increment the testing coverage. I would also fix a current bug that happens if only the parkCode or the stateCode is duplicated, that doesn't mean the whole abject is duplicated but it is something that needs to be fixed, since it will throw an exception when querying by parkCode or stateCode. (only if they are duplicated)
 
 What would you do differently if you were allocated more time?
 
-In addition to the improvements mentioned above, I would improve the DB design. I would also fix a current bug that happens if only the parkCode or the stateCode is duplicated, that doesn't mean the whole abject is duplicated but it is something that needs to be fixed, since it will throw an exception when querying by parkCode or stateCode. (only if they are duplicated)
+In addition to the improvements mentioned above, I would improve the DB design.
 
 API SPEC
 
