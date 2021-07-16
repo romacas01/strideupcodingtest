@@ -29,25 +29,32 @@ public class ParksController {
     @Value("${nps.api.key}")
     private String apiKey;
 
+
+    /**
+     * Save all the parks on the DB and returns all that parks that were saved
+     * If the request params are passed it will fetch and save only the parks related to the param
+     * @param parkCode (not required)
+     * @param stateCode (not required)
+     * @return a list of all parks saved on the DB
+     */
     @GetMapping("/parks")
     public List<Park> getParks(@RequestParam(name = "parkCode",required = false) String parkCode, @RequestParam(name = "stateCode",required = false) String stateCode){
 
         String parksRes = null;
+        String npsUrl = "https://developer.nps.gov/api/v1/parks?api_key=" + apiKey;
 
         //TODO: Use a Map to get the pamaters instead?
+        //If the parameters are passed we will fetch and save onlythe parks related to the park code
         if(parkCode != null && stateCode != null){
-            parksRes = restTemplate.getForObject(
-                    "https://developer.nps.gov/api/v1/parks?parkCode=" + parkCode + "&stateCode=" + stateCode + "&api_key=" + apiKey, String.class);
+            npsUrl = "https://developer.nps.gov/api/v1/parks?api_key=" + apiKey + "&parkCode=" + parkCode + "&stateCode=" + stateCode;
         }else if(parkCode != null){
-            parksRes = restTemplate.getForObject(
-                    "https://developer.nps.gov/api/v1/parks?parkCode=" + parkCode + "&api_key=" + apiKey, String.class);
+            npsUrl = "https://developer.nps.gov/api/v1/parks?api_key=" + apiKey + "&parkCode=" + parkCode;
         }else if(stateCode != null){
-            parksRes = restTemplate.getForObject(
-                    "https://developer.nps.gov/api/v1/parks?stateCode=" + stateCode + "&api_key=" + apiKey, String.class);
-        }else {
-            parksRes = restTemplate.getForObject(
-                    "https://developer.nps.gov/api/v1/parks?api_key=" + apiKey, String.class);
+            npsUrl = "https://developer.nps.gov/api/v1/parks?api_key=" + apiKey + "&stateCode=" + stateCode;
         }
+
+        parksRes = restTemplate.getForObject(
+                npsUrl, String.class);
 
         //Parse the Json Object and get the data field containing the park fields
         JsonParser parser = new JsonParser();
@@ -75,9 +82,16 @@ public class ParksController {
 
         parkService.saveAll(parksSet);
 
+        //Will display all the parks that are saved on the db
         return parkService.getParks();
     }
 
+    /**
+     * Retrieve the park according to the parkCode
+     * If the park does not exist on the db it will make call to nps, retrieve the park information and save on the db
+     * @param parkCode
+     * @return the park according to the parkCode
+     */
     @GetMapping("/park/{parkCode}")
     public Park getParkByParkCode(@PathVariable String parkCode){
        Park park = parkService.getByParkCode(parkCode);
@@ -109,6 +123,10 @@ public class ParksController {
        return parkService.getByParkCode(parkCode);
     }
 
+    /**
+     * Saves the park on the DB.
+     * @param park
+     */
     @PostMapping(path="/parks", consumes = "application/json", produces = "application/json")
     public void addPark(@RequestBody Park park){
 
@@ -119,6 +137,11 @@ public class ParksController {
         parkService.saveAll(parks);
     }
 
+    /**
+     * Updates the park related to the parkCode
+     * @param parkCode
+     * @param park
+     */
     @PutMapping("/parks/{parkCode}")
     public void updatePark(@PathVariable("parkCode") String parkCode, @RequestBody Park park){
         Park parkObj = parkService.getByParkCode(parkCode);
