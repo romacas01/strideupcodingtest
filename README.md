@@ -16,6 +16,8 @@ What would you do differently if you were allocated more time?
 
 In addition to the improvements mentioned above, I would improve the DB design.
 
+API SPEC
+
 ```json
 {
   "swagger": "2.0",
