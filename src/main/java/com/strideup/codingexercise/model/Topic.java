@@ -11,6 +11,8 @@ public class Topic {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(columnDefinition="TEXT")
     private String name;
 
 

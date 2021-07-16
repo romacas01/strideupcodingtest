@@ -8,10 +8,12 @@ public class EntrancePasses {
     @Id
     @GeneratedValue
     private Long id;
+
+    private String title;
     private Long cost;
 
+    @Column(columnDefinition="TEXT")
     private String description;
-    private String title;
 
     public Long getId() {
         return id;

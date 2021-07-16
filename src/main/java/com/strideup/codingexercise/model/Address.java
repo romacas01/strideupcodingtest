@@ -11,12 +11,18 @@ public class Address {
     @GeneratedValue
     private Long id;
 
+    private Type type;
     private String postalCode;
     private String city;
     private String stateCode;
+
+    @Column(columnDefinition="TEXT")
     private String line1;
-    private Type type;
+
+    @Column(columnDefinition="TEXT")
     private String line3;
+
+    @Column(columnDefinition="TEXT")
     private String line2;
 
     public Long getId() {

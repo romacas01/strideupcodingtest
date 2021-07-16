@@ -75,7 +75,7 @@ public class ParksController {
         return parkService.getParks();
     }
 
-    @GetMapping("/parks/{parkCode}")
+    @GetMapping("/park/{parkCode}")
     public Park getParkByParkCode(@PathVariable String parkCode){
        Park park = parkService.getByParkCode(parkCode);
        if(park == null){

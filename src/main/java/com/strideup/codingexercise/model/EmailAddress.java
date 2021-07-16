@@ -9,8 +9,10 @@ public class EmailAddress {
     @GeneratedValue
     private Long id;
 
-    private String description;
     private String emailAddress;
+
+    @Column(columnDefinition="TEXT")
+    private String description;
 
     public Long getId() {
         return id;

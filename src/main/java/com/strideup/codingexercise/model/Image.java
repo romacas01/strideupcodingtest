@@ -9,11 +9,17 @@ public class Image {
     @GeneratedValue
     private Long Id;
 
-    private String credit;
-    private String altText;
     private String title;
-    private String caption;
     private String url;
+
+    @Column(columnDefinition="TEXT")
+    private String credit;
+
+    @Column(columnDefinition="TEXT")
+    private String altText;
+
+    @Column(columnDefinition="TEXT")
+    private String caption;
 
     public Long getId() {
         return Id;
