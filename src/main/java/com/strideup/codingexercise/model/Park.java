@@ -15,18 +15,31 @@ public class Park {
     @GeneratedValue
     private Long id;
 
+    @Column(columnDefinition="TEXT")
     private String description;
+    @Column(columnDefinition="TEXT")
     private String designation;
+    @Column(columnDefinition="TEXT")
     private String directionsInfo;
+    @Column(columnDefinition="TEXT")
     private String directionsUrl;
+    @Column(columnDefinition="TEXT")
     private String fullName;
+    @Column(columnDefinition="TEXT")
     private String latLong;
+    @Column(columnDefinition="TEXT")
     private String latitude;
+    @Column(columnDefinition="TEXT")
     private String longitude;
+    @Column(columnDefinition="TEXT")
     private String name;
+    @Column(columnDefinition="TEXT")
     private String parkCode;
+    @Column(columnDefinition="TEXT")
     private String states;
+    @Column(columnDefinition="TEXT")
     private String url;
+    @Column(columnDefinition="TEXT")
     private String weatherInfo;
 
     @OneToMany( cascade=CascadeType.ALL)
