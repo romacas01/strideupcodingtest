@@ -3,11 +3,11 @@ NPS StrideUp
 
 This is a very simple application that retrieves the information about parks from the National Park Service
 
-*How to install and run the application*
+**How to install and run the application**
 
-1- Fetch the project into your local environment;
-2- Import the project to any IDE of your preference;
-3- Run the CodingexerciseApplication.java class
+- Fetch the project into your local environment
+- Import the project to any IDE of your preference
+- Run the CodingexerciseApplication.java class
 
 
 How did you decide which technologies to use as part of your solution?
