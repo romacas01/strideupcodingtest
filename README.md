@@ -3,10 +3,17 @@ NPS StrideUp
 
 This is a very simple application that retrieves the information about parks from the National Park Service
 
+*How to install and run the application*
+
+1- Fetch the project into your local environment;
+2- Import the project to any IDE of your preference;
+3- Run the CodingexerciseApplication.java class
+
+
 How did you decide which technologies to use as part of your solution?
 
-I decided to build the application on SpringBoot, because it is the JAVA framework I am most familiar with, also is is very easy to set up.
-I also decided to use Spring Data JPA on the repository layer since it is very simple and reduces the amount of boilerplate code that needs to be written by just implementing the interface
+I decided to build the application on SpringBoot, because it is the JAVA framework I am most familiar with, also it is very easy to set up.
+I also decided to use Spring Data JPA on the repository layer since it is very simple and reduces the amount of boilerplate code that needs to be written by just implementing the interface.
 
 Are there any improvements you could make to your submission?
 
@@ -14,7 +21,7 @@ I would better refactor the controller by eliminating some duplicated code. I wo
 
 What would you do differently if you were allocated more time?
 
-In addition to the improvements mentioned above, I would improve the DB design.
+In addition to the improvements mentioned above, I would improve the DB design. I would also fix a current bug that happens if only the parkCode or the stateCode is duplicated, that doesn't mean the whole abject is duplicated but it is something that needs to be fixed, since it will throw an exception when querying by parkCode or stateCode. (only if they are duplicated)
 
 API SPEC
 
