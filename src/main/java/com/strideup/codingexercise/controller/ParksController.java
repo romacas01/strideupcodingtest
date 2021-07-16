@@ -34,6 +34,7 @@ public class ParksController {
 
         String parksRes = null;
 
+        //TODO: Use a Map to get the pamaters instead?
         if(parkCode != null && stateCode != null){
             parksRes = restTemplate.getForObject(
                     "https://developer.nps.gov/api/v1/parks?parkCode=" + parkCode + "&stateCode=" + stateCode + "&api_key=" + apiKey, String.class);
@@ -55,12 +56,14 @@ public class ParksController {
 
         Set<Park> parksSet = new HashSet<>(parkService.getParks());
 
+        Park parkObj = null;
+
         //Get each park object from the JSON and create a park object
         for(int i = 0; i < jSonArray.size(); i++){
             String obj = jSonArray.get(i).toString();
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-            Park parkObj = null;
+
             try {
                 parkObj = objectMapper.readValue(obj, Park.class);
                 //If the park already exists on the set it will not be added
@@ -82,56 +85,73 @@ public class ParksController {
            String parksRes = restTemplate.getForObject(
                    "https://developer.nps.gov/api/v1/parks?parkCode=" + parkCode + "&api_key=" + apiKey, String.class);
 
+           //Get all the parks first
+           Set<Park> parksSet = new HashSet<>(parkService.getParks());
+
            JsonParser parser = new JsonParser();
            JsonObject jSonObj = parser.parse(parksRes).getAsJsonObject();
            JsonArray jSonArray = (JsonArray) jSonObj.get("data");
            String obj = jSonArray.get(0).toString();
            ObjectMapper objectMapper = new ObjectMapper();
            objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
            Park parkObj = null;
            try {
                parkObj = objectMapper.readValue(obj, Park.class);
+               //If the park already exists on the set it will not be added
+               parksSet.add(parkObj);
            } catch (JsonProcessingException e) {
                e.printStackTrace();
            }
+
            parkService.savePark(parkObj);
-           park = parkService.getByParkCode(parkCode);
        }
-       return park;
+       return parkService.getByParkCode(parkCode);
     }
 
     @PostMapping(path="/parks", consumes = "application/json", produces = "application/json")
     public void addPark(@RequestBody Park park){
-        parkService.savePark(park);
+
+        //Avoid duplicated park being added
+        Set<Park> parks = new HashSet<>(parkService.getParks());
+        parks.add(park);
+
+        parkService.saveAll(parks);
     }
 
     @PutMapping("/parks/{parkCode}")
     public void updatePark(@PathVariable("parkCode") String parkCode, @RequestBody Park park){
         Park parkObj = parkService.getByParkCode(parkCode);
 
-        parkObj.setDescription(park.getDescription());
-        parkObj.setDesignation(park.getDesignation());
-        parkObj.setDirectionsInfo(park.getDirectionsInfo());
-        parkObj.setDirectionsUrl(park.getDirectionsUrl());
-        parkObj.setFullName(park.getFullName());
-        parkObj.setLatLong(park.getLatLong());
-        parkObj.setLatitude(park.getLatitude());
-        parkObj.setLongitude(park.getLongitude());
-        parkObj.setName(park.getName());
-        parkObj.setParkCode(park.getParkCode());
-        parkObj.setStates(park.getStates());
-        parkObj.setUrl(park.getUrl());
-        parkObj.setWeatherInfo(park.getWeatherInfo());
-        parkObj.setActivities(park.getActivities());
-        parkObj.setAddresses(park.getAddresses());
-        parkObj.setContacts(park.getContacts());
-        parkObj.setEntranceFees(park.getEntranceFees());
-        parkObj.setEntrancePasses(park.getEntrancePasses());
-        parkObj.setImages(park.getImages());
-        parkObj.setTopics(park.getTopics());
-        parkObj.setOperatingHours(park.getOperatingHours());
+        if(parkObj != null) {
+            parkObj.setDescription(park.getDescription());
+            parkObj.setDesignation(park.getDesignation());
+            parkObj.setDirectionsInfo(park.getDirectionsInfo());
+            parkObj.setDirectionsUrl(park.getDirectionsUrl());
+            parkObj.setFullName(park.getFullName());
+            parkObj.setLatLong(park.getLatLong());
+            parkObj.setLatitude(park.getLatitude());
+            parkObj.setLongitude(park.getLongitude());
+            parkObj.setName(park.getName());
+            parkObj.setParkCode(park.getParkCode());
+            parkObj.setStates(park.getStates());
+            parkObj.setUrl(park.getUrl());
+            parkObj.setWeatherInfo(park.getWeatherInfo());
+            parkObj.setActivities(park.getActivities());
+            parkObj.setAddresses(park.getAddresses());
+            parkObj.setContacts(park.getContacts());
+            parkObj.setEntranceFees(park.getEntranceFees());
+            parkObj.setEntrancePasses(park.getEntrancePasses());
+            parkObj.setImages(park.getImages());
+            parkObj.setTopics(park.getTopics());
+            parkObj.setOperatingHours(park.getOperatingHours());
 
-        parkService.savePark(parkObj);
+            //Avoid duplicated park being added
+            Set<Park> parks = new HashSet<>(parkService.getParks());
+            parks.add(parkObj);
+
+            parkService.saveAll(parks);
+        }
     }
 
 

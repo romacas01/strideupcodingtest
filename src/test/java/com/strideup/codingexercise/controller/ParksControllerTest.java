@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 
@@ -49,25 +50,34 @@ public class ParksControllerTest {
     @InjectMocks
     private ParksController parksController;
 
+    private Park park1;
+    private Park park2;
+    private Park park3;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         Mockito.reset(parkServiceMock);
         this.mockMvc = webAppContextSetup(wac).build();
-    }
 
-    @Test
-    public void getParks_should_return_all_parks() throws Exception{
-
-        Park park1 = new Park.Builder("Park Testing1")
+        park1 = new Park.Builder("Park Testing1")
                 .withParkCode("T1")
                 .withDescription("park testing 1")
                 .build();
 
-        Park park2 = new Park.Builder("Park Testing2")
+        park2 = new Park.Builder("Park Testing2")
                 .withParkCode("T2")
                 .withDescription("park testing 2")
                 .build();
+
+        park3 = new Park.Builder("Park Testing3")
+                .withParkCode("t3")
+                .withDescription("park testing 3")
+                .build();
+    }
+
+    @Test
+    public void getParks_should_return_all_parks() throws Exception{
 
         when(parkServiceMock.getParks()).thenReturn(Arrays.asList(park1, park2));
 
@@ -89,28 +99,23 @@ public class ParksControllerTest {
 
         when(parkServiceMock.getByParkCode(any(String.class))).thenReturn(park1);
 
-        mockMvc.perform(get("/api/parks/t1")
+        mockMvc.perform(get("/api/park/t1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.parkCode", Matchers.is("t1")));
 
-        verify(parkServiceMock, times(1)).getByParkCode(any(String.class));
+        verify(parkServiceMock, times(2)).getByParkCode(any(String.class));
     }
 
     @Test
     public void add_park_should_add_new_park()throws Exception{
-        Park park1 = new Park.Builder("Park Testing1")
-                .withParkCode("t3")
-                .withDescription("park testing 3")
-                .build();
-
-        when(parkRepository.save(park1)).thenReturn(park1);
 
         mockMvc.perform(post("/api/parks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{ \"parCode\": \"t3\", \"description\": \"park testing 3\" }") )
                 .andExpect(status().isOk());
 
-        verify(parkServiceMock, times(1)).savePark(any(Park.class));
+        verify(parkServiceMock, times(1)).getParks();
+        verify(parkServiceMock, times(1)).saveAll(any(Set.class));
     }
 }
